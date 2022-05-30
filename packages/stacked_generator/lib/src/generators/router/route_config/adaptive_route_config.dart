@@ -22,10 +22,7 @@ class AdaptiveRouteConfig extends RouteConfig {
   });
 
   @override
-  Set<String> registerImports() {
-    return {...super.registerImports()};
-  }
-
+  List<String> get extraImports => const ["package:stacked/stacked.dart"];
   @override
   String registerRoutes() {
     StringBuffer stringBuffer = StringBuffer();

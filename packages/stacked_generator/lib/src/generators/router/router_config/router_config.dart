@@ -1,9 +1,11 @@
+import 'package:stacked_generator/src/generators/router/route_config/route_config_iterator.dart';
+
 import '../route_config/route_config.dart';
 
 /// Extracts and holds router configs
 /// to be used in [RouterClassGenerator]
 
-class RouterConfig {
+class RouterConfig implements Aggregator {
   final bool generateNavigationHelper;
   final List<RouteConfig> routes;
   final String routesClassName;
@@ -35,14 +37,11 @@ class RouterConfig {
     );
   }
 
-  List<RouteConfig> get subRouters => routes
-      .where((route) => route.children.isNotEmpty)
-      .map((route) => route.children)
-      .fold<List<RouteConfig>>([],
-          (previousValue, element) => [...previousValue, ...element]).toList();
-
   @override
   String toString() {
     return 'RouterConfig{routes: $routes, routesClassName: $routesClassName, routerClassName: $routerClassName}';
   }
+
+  @override
+  RouteConfigIterator getIterator() => RouteConfigIterator(routes);
 }

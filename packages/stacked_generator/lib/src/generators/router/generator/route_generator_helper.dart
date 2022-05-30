@@ -3,29 +3,41 @@ import 'package:stacked_generator/src/generators/router/route_config/route_confi
 import 'package:stacked_generator/utils.dart';
 
 mixin RouteGeneratorHelper on BaseGenerator {
-  void generateImports(List<RouteConfig> routes) {
-    final validImports = routes.map((rc) {
-      return rc.registerImports();
-    }).where((imports) {
-      return imports.isNotEmpty;
-    }).fold<Set<String>>({}, (previousValue, element) {
-      return {...previousValue, ...element};
-    });
-
+  void sortAndGenerateImports(Set<String> imports) {
     final dartImports =
-        validImports.where((element) => element.startsWith('dart')).toSet();
+        imports.where((element) => element.startsWith('dart')).toSet();
     sortAndGenerate(dartImports);
     newLine();
 
-    var packageImports =
-        validImports.where((element) => element.startsWith('package')).toSet();
-    packageImports.add("package:stacked/stacked.dart");
+    final packageImports =
+        imports.where((element) => element.startsWith('package')).toSet();
     sortAndGenerate(packageImports);
     newLine();
 
-    var rest = validImports.difference({...dartImports, ...packageImports});
+    final rest = imports.difference({...dartImports, ...packageImports});
     sortAndGenerate(rest);
   }
+
+  Set<String> getImportsForRoute(RouteConfig routeConfig) {
+    final guardImports = _getGuardsImports(routeConfig);
+    final paramertersImports = _getParametersImports(routeConfig);
+
+    return {
+      ...routeConfig.extraImports,
+      ...guardImports,
+      ...paramertersImports
+    };
+  }
+
+  Set<String> _getGuardsImports(RouteConfig routeConfig) => routeConfig.guards
+      .where((guard) => guard.import != null)
+      .map((guard) => guard.import!)
+      .toSet();
+  Set<String> _getParametersImports(RouteConfig routeConfig) =>
+      routeConfig.parameters
+          .map((parameter) => parameter.imports)
+          .fold<Set<String>>(
+              {}, (previousValue, element) => {...previousValue, ...element});
 
   void generateRoutesConstantsMap(
       List<RouteConfig> routes, String routesClassName) {

@@ -18,7 +18,7 @@ class RouteParamConfig {
   final bool? isPathParam;
   final bool? isQueryParam;
   final String? defaultValueCode;
-  final Set<String>? imports;
+  final Set<String> imports;
 
   RouteParamConfig({
     this.type,
@@ -29,7 +29,7 @@ class RouteParamConfig {
     this.isPathParam,
     this.isQueryParam,
     this.defaultValueCode,
-    this.imports,
+    this.imports = const {},
   });
 
   String get getterName {

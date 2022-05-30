@@ -22,10 +22,8 @@ class CupertinoRouteConfig extends RouteConfig {
   });
 
   @override
-  Set<String> registerImports() {
-    return {...super.registerImports(), "package:flutter/cupertino.dart"};
-  }
-
+  List<String> get extraImports =>
+      ["package:flutter/cupertino.dart", "package:stacked/stacked.dart"];
   @override
   String registerRoutes() {
     StringBuffer stringBuffer = StringBuffer();

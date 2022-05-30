@@ -29,13 +29,11 @@ class CustomRouteConfig extends RouteConfig {
     this.transitionBuilder,
   });
   @override
-  Set<String> registerImports() {
-    return {
-      ...super.registerImports(),
-      "package:flutter/material.dart",
-      this.transitionBuilder?.import ?? ''
-    }.takeWhile((value) => value.isNotEmpty).toSet();
-  }
+  List<String> get extraImports => [
+        "package:flutter/material.dart",
+        "package:stacked/stacked.dart",
+        if (transitionBuilder?.import != null) this.transitionBuilder!.import!
+      ];
 
   @override
   String registerRoutes() {

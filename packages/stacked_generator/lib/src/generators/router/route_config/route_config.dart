@@ -2,7 +2,7 @@ import 'package:stacked_generator/route_config_resolver.dart';
 import 'package:stacked_generator/src/generators/exceptions/invalid_generator_input_exception.dart';
 import 'package:stacked_generator/utils.dart';
 
-class RouteConfig {
+abstract class RouteConfig {
   final String name;
   final String pathName;
   final String className;
@@ -32,22 +32,6 @@ class RouteConfig {
 
   String get argumentsHolderClassName {
     return '${className}Arguments';
-  }
-
-  Set<String> registerImports() {
-    final guardsImports = guards
-        .where((guard) => guard.import != null)
-        .map((guard) => guard.import!)
-        .toSet();
-
-    final paramertersImports = this
-        .parameters
-        .map((parameter) => parameter.imports)
-        .fold<Set<String>>({}, (previousValue, element) {
-      return {...previousValue, ...?element};
-    });
-
-    return {...this.imports, ...guardsImports, ...paramertersImports};
   }
 
   String registerArgs() {
@@ -143,6 +127,7 @@ class RouteConfig {
     }
   }
 
+  List<String> get extraImports;
   RouteConfig copyWith({
     String? name,
     String? pathName,
@@ -156,20 +141,5 @@ class RouteConfig {
     List<RouteConfig>? children,
     bool? hasConstConstructor,
     Set<String>? imports,
-  }) {
-    return RouteConfig(
-      name: name ?? this.name,
-      pathName: pathName ?? this.pathName,
-      className: className ?? this.className,
-      fullscreenDialog: fullscreenDialog ?? this.fullscreenDialog,
-      maintainState: maintainState ?? this.maintainState,
-      returnType: returnType ?? this.returnType,
-      parameters: parameters ?? this.parameters,
-      guards: guards ?? this.guards,
-      hasWrapper: hasWrapper ?? this.hasWrapper,
-      children: children ?? this.children,
-      hasConstConstructor: hasConstConstructor ?? this.hasConstConstructor,
-      imports: imports ?? this.imports,
-    );
-  }
+  });
 }

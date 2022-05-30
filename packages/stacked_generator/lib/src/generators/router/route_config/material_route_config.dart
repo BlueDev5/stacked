@@ -19,11 +19,6 @@ class MaterialRouteConfig extends RouteConfig {
   });
 
   @override
-  Set<String> registerImports() {
-    return {...super.registerImports(), "package:flutter/material.dart"};
-  }
-
-  @override
   String registerRoutes() {
     StringBuffer stringBuffer = StringBuffer();
 
@@ -63,4 +58,8 @@ class MaterialRouteConfig extends RouteConfig {
       imports: imports ?? this.imports,
     );
   }
+
+  @override
+  List<String> get extraImports =>
+      ["package:flutter/material.dart", "package:stacked/stacked.dart"];
 }
